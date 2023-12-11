@@ -1,6 +1,12 @@
 import { Link, Navigate, Outlet } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
+import { useEffect } from "react";
 import axiosClient from "../axios-client";
+
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 
 
 export default function DefaultLayout(){
@@ -20,43 +26,53 @@ export default function DefaultLayout(){
     }
 
 
-    // useEffect(()=>{
-    //     axiosClient.get('/user')
-    //     .then(({data}) => {
-    //         setUser(data)
-    //     })
-    // }, [])
+    useEffect(()=>{
+        axiosClient.get('/user')
+        .then(({data}) => {
+            setUser(data)
+        })
+    }, [])
     return (
         <div id="defaultLayout">
-            <aside>
-                <Link to="/dashboard">Dashboard</Link>
-                <Link to="/users">Users</Link>
-                <Link to="/jobs">Jobs</Link>
-                <Link to="/companies">Companies</Link>
 
-
-
-
-            </aside>
+<Navbar expand="lg" className="bg-body-tertiary">
+      <Container>
+        <Navbar.Brand href="/dashboard">User Dashboard</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link href="/dashboard">Home</Nav.Link>
+            <Nav.Link href="/users">Users</Nav.Link>
+            <NavDropdown title="Profile" id="basic-nav-dropdown">
+              <NavDropdown.Item href="/login"> {user.name}</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.3"></NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="#action/3.4" onClick={onLogout} >
+              Logout
+              </NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+            
             <div className="content">
-                <header>
-                    <div>
-                        <h4><a href="" className="text-decoration-none text-dark fw-bold shadow">Jobber</a></h4>
-                    </div>
+                {/* <header>
+                   
                     <div>
                         {user.name}
                         <a href="#" onClick={onLogout} className="mx-2 btn-logout btn btn-danger">Logout</a>
                     </div>
-                </header>
+                </header> */}
                 <main>
                     <Outlet />
                 </main>
             </div>
-            {notification &&
+            {/* {notification &&
             <div className="notification">
                 {notification}
             </div>
-            }   
+            }    */}
         </div>
     )
 }
